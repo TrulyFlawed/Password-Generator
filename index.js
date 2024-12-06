@@ -65,15 +65,13 @@ const PasswordGeneratorModule = (function() {
 			return false;
 		}
 		
-		
-		
 		return true;
 	}
 	
 	function generatePassword() {
 		const length = parseInt(document.getElementById('length').value);
-		const minNumbers = parseInt(document.getElementById('minNumbers').value);
-		const minSpecialChars = parseInt(document.getElementById('minSpecialChars').value);
+		let minNumbers = parseInt(document.getElementById('minNumbers').value);
+		let minSpecialChars = parseInt(document.getElementById('minSpecialChars').value);
 
 		const includeLowercase = document.getElementById('includeLowercase').checked;
 		const includeUppercase = document.getElementById('includeUppercase').checked;
@@ -84,6 +82,16 @@ const PasswordGeneratorModule = (function() {
 		// Validate inputs
 		if (!validateInputs(length, minNumbers, minSpecialChars, includeLowercase, includeUppercase, includeNumbers, includeSpecialChars)) {
 			return;  // Exit early if validation fails
+		}
+		
+		// If numbers checkbox is unchecked, treat minNumbers as 0
+		if (!includeNumbers) {
+			minNumbers = 0;
+		}
+
+		// If special characters checkbox is unchecked, treat minSpecialChars as 0
+		if (!includeSpecialChars) {
+			minSpecialChars = 0;
 		}
 		
 		const charset = getCharset(includeLowercase, includeUppercase, includeNumbers, includeSpecialChars, excludeAmbiguous);
