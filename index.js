@@ -34,6 +34,16 @@ const PasswordGeneratorModule = (function() {
 		return password;
 	}
 	
+	function validateInputs(length, minNumbers, minSpecialChars, includeLowercase, includeUppercase, includeNumbers, includeSpecialChars) {
+		// Check if at least one character type is selected
+		if (!includeLowercase && !includeUppercase && !includeNumbers && !includeSpecialChars) {
+			alert("Please select at least one character type (lowercase, uppercase, numbers, or special characters).");
+			return false;
+		}
+
+		return true;
+	}
+	
 	function generatePassword() {
 		const length = parseInt(document.getElementById('length').value);
 		const minNumbers = parseInt(document.getElementById('minNumbers').value);
@@ -45,6 +55,11 @@ const PasswordGeneratorModule = (function() {
 		const includeSpecialChars = document.getElementById('includeSpecialChars').checked;
 		const excludeAmbiguous = document.getElementById('excludeAmbiguous').checked;
 
+		// Validate inputs
+		if (!validateInputs(length, minNumbers, minSpecialChars, includeLowercase, includeUppercase, includeNumbers, includeSpecialChars)) {
+			return;  // Exit early if validation fails
+		}
+		
 		const charset = getCharset(includeLowercase, includeUppercase, includeNumbers, includeSpecialChars, excludeAmbiguous);
 		
 		const numberCharset = excludeAmbiguous ? "23456789" : "0123456789"; // Excluding "0" and "1" if checked
