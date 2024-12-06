@@ -40,7 +40,13 @@ const PasswordGeneratorModule = (function() {
 			alert("Please select at least one character type (lowercase, uppercase, numbers, or special characters).");
 			return false;
 		}
-
+		
+		// Ensure the sum of minNumbers and minSpecialChars doesn't exceed password length
+		if (minNumbers + minSpecialChars > length) {
+			alert("The sum of minimum numbers and special characters cannot exceed the password length.");
+			return false;
+		}
+		
 		return true;
 	}
 	
