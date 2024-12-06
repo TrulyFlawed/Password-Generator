@@ -47,6 +47,26 @@ const PasswordGeneratorModule = (function() {
 			return false;
 		}
 		
+		// Ensure at least one uppercase & one lowercase letter exists in password if both checkboxes are selected
+		if ((includeLowercase && includeUppercase) && minNumbers + minSpecialChars === length-1) {
+			alert("At least one uppercase & lowercase letter must be included if both uppercase & lowercase checkboxes are selected. You may need to decrease the minimum number & special character values to accomplish this.");
+			return false;
+		}
+		
+		// Ensure at least one lowercase letter if the lowercase checkbox is selected
+		if (includeLowercase && minNumbers + minSpecialChars === length) {
+			alert("At least one lowercase letter must be included if the lowercase checkbox is selected. You may need to decrease the minimum number & special character values to accomplish this.");
+			return false;
+		}
+
+		// Ensure at least one uppercase letter if the uppercase checkbox is selected
+		if (includeUppercase && minNumbers + minSpecialChars === length) {
+			alert("At least one uppercase letter must be included if the uppercase checkbox is selected. You may need to decrease the minimum number & special character values to accomplish this.");
+			return false;
+		}
+		
+		
+		
 		return true;
 	}
 	
@@ -81,6 +101,16 @@ const PasswordGeneratorModule = (function() {
 			password += charset[randomIndex];
 		}
 
+		// Ensure at least one lowercase letter if required
+		if (includeLowercase && !/[a-z]/.test(password)) {
+			password = password.slice(0, password.length - 1) + lowercaseCharset[Math.floor(Math.random() * lowercaseCharset.length)];
+		}
+
+		// Ensure at least one uppercase letter if required
+		if (includeUppercase && !/[A-Z]/.test(password)) {
+			password = password.slice(0, password.length - 1) + uppercaseCharset[Math.floor(Math.random() * uppercaseCharset.length)];
+		}
+		
 		// Shuffle password to randomize the order (to prevent having the numbers and special chars always at the beginning)
 		password = shuffleString(password);
 
