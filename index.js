@@ -79,6 +79,11 @@ const PasswordGeneratorModule = (function() {
 		const includeSpecialChars = document.getElementById('includeSpecialChars').checked;
 		const excludeAmbiguous = document.getElementById('excludeAmbiguous').checked;
 
+		// Dirty, ugly fix to potentially fix an issue with these character sets being unavailable for
+		// our if statements which ensure the password has at least one uppercase or lowercase character.
+		const lowercaseCharset = excludeAmbiguous ? "abcdefghijkmnpqrstuvwxyz" : "abcdefghijklmnopqrstuvwxyz"; // Excluding "l" and "I" if checked
+		const uppercaseCharset = excludeAmbiguous ? "ABCDEFGHJKLMNPQRSTUVWXYZ" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // Excluding "I" and "O" if checked
+
 		// Validate inputs
 		if (!validateInputs(length, minNumbers, minSpecialChars, includeLowercase, includeUppercase, includeNumbers, includeSpecialChars)) {
 			return;  // Exit early if validation fails
