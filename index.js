@@ -1,23 +1,23 @@
 const PasswordGeneratorModule = (function() {
-	function getCharset(includeLowercase, includeUppercase, includeNumbers, includeSpecialChars, excludeAmbiguous) {
+	function getCharset(includeLowercase, includeUppercase, includeNumbers, includeSymbols, excludeAmbiguous) {
 		const lowercaseCharset = excludeAmbiguous ? "abcdefghijkmnpqrstuvwxyz" : "abcdefghijklmnopqrstuvwxyz"; // Excluding "l" and "I" if checked
 		const uppercaseCharset = excludeAmbiguous ? "ABCDEFGHJKLMNPQRSTUVWXYZ" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // Excluding "I" and "O" if checked
 		const numberCharset = excludeAmbiguous ? "23456789" : "0123456789"; // Excluding "0" and "1" if checked
-		const specialCharset = "!@#$%^&*";
+		const symbolCharset = "!@#$%^&*";
 	
 		let charset = "";
 		if (includeLowercase) charset += lowercaseCharset;
 		if (includeUppercase) charset += uppercaseCharset;
 		if (includeNumbers) charset += numberCharset;
-		if (includeSpecialChars) charset += specialCharset;
+		if (includeSymbols) charset += symbolCharset;
 	
 		return charset;
 	}
 	
-	// Function to ensure minimum numbers and special characters
-	function addMinimumChars(password, minNumbers, minSpecialChars, numberCharset, specialCharset) {
+	// Function to ensure minimum numbers and symbols
+	function addMinimumChars(password, minNumbers, minSymbols, numberCharset, symbolCharset) {
 		let numCount = 0;
-		let specialCount = 0;
+		let symbolCount = 0;
 
 		// Add minimum required numbers
 		while (numCount < minNumbers) {
@@ -25,43 +25,43 @@ const PasswordGeneratorModule = (function() {
 			numCount++;
 		}
 
-		// Add minimum required special characters
-		while (specialCount < minSpecialChars) {
-			password += specialCharset[Math.floor(Math.random() * specialCharset.length)];
-			specialCount++;
+		// Add minimum required symbols
+		while (symbolCount < minSymbols) {
+			password += symbolCharset[Math.floor(Math.random() * symbolCharset.length)];
+			symbolCount++;
 		}
 
 		return password;
 	}
 	
-	function validateInputs(length, minNumbers, minSpecialChars, includeLowercase, includeUppercase, includeNumbers, includeSpecialChars) {
+	function validateInputs(length, minNumbers, minSymbols, includeLowercase, includeUppercase, includeNumbers, includeSymbols) {
 		// Check if at least one character type is selected
-		if (!includeLowercase && !includeUppercase && !includeNumbers && !includeSpecialChars) {
-			alert("Please select at least one character type (lowercase, uppercase, numbers, or special characters).");
+		if (!includeLowercase && !includeUppercase && !includeNumbers && !includeSymbols) {
+			alert("Please select at least one character type (lowercase, uppercase, numbers, or symbols).");
 			return false;
 		}
 		
-		// Ensure the sum of minNumbers and minSpecialChars doesn't exceed password length
-		if (minNumbers + minSpecialChars > length) {
-			alert("The sum of minimum numbers and special characters cannot exceed the password length.");
+		// Ensure the sum of minNumbers and minSymbols doesn't exceed password length
+		if (minNumbers + minSymbols > length) {
+			alert("The sum of minimum numbers and symbols cannot exceed the password length.");
 			return false;
 		}
 		
 		// Ensure at least one uppercase & one lowercase letter exists in password if both checkboxes are selected
-		if ((includeLowercase && includeUppercase) && minNumbers + minSpecialChars === length-1) {
-			alert("At least one uppercase & lowercase letter must be included if both uppercase & lowercase checkboxes are selected. You may need to decrease the minimum number & special character values to accomplish this.");
+		if ((includeLowercase && includeUppercase) && minNumbers + minSymbols === length-1) {
+			alert("At least one uppercase & lowercase letter must be included if both uppercase & lowercase checkboxes are selected. You may need to decrease the minimum number & symbols values to accomplish this.");
 			return false;
 		}
 		
 		// Ensure at least one lowercase letter if the lowercase checkbox is selected
-		if (includeLowercase && minNumbers + minSpecialChars === length) {
-			alert("At least one lowercase letter must be included if the lowercase checkbox is selected. You may need to decrease the minimum number & special character values to accomplish this.");
+		if (includeLowercase && minNumbers + minSymbols === length) {
+			alert("At least one lowercase letter must be included if the lowercase checkbox is selected. You may need to decrease the minimum number & symbols values to accomplish this.");
 			return false;
 		}
 
 		// Ensure at least one uppercase letter if the uppercase checkbox is selected
-		if (includeUppercase && minNumbers + minSpecialChars === length) {
-			alert("At least one uppercase letter must be included if the uppercase checkbox is selected. You may need to decrease the minimum number & special character values to accomplish this.");
+		if (includeUppercase && minNumbers + minSymbols === length) {
+			alert("At least one uppercase letter must be included if the uppercase checkbox is selected. You may need to decrease the minimum number & symbols values to accomplish this.");
 			return false;
 		}
 		
@@ -71,12 +71,12 @@ const PasswordGeneratorModule = (function() {
 	function generatePassword() {
 		const length = parseInt(document.getElementById('length').value);
 		let minNumbers = parseInt(document.getElementById('minNumbers').value);
-		let minSpecialChars = parseInt(document.getElementById('minSpecialChars').value);
+		let minSymbols = parseInt(document.getElementById('minSymbols').value);
 
 		const includeLowercase = document.getElementById('includeLowercase').checked;
 		const includeUppercase = document.getElementById('includeUppercase').checked;
 		const includeNumbers = document.getElementById('includeNumbers').checked;
-		const includeSpecialChars = document.getElementById('includeSpecialChars').checked;
+		const includeSymbols = document.getElementById('includeSymbols').checked;
 		const excludeAmbiguous = document.getElementById('excludeAmbiguous').checked;
 
 		// Dirty, ugly fix to potentially fix an issue with these character sets being unavailable for
@@ -85,7 +85,7 @@ const PasswordGeneratorModule = (function() {
 		const uppercaseCharset = excludeAmbiguous ? "ABCDEFGHJKLMNPQRSTUVWXYZ" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // Excluding "I" and "O" if checked
 
 		// Validate inputs
-		if (!validateInputs(length, minNumbers, minSpecialChars, includeLowercase, includeUppercase, includeNumbers, includeSpecialChars)) {
+		if (!validateInputs(length, minNumbers, minSymbols, includeLowercase, includeUppercase, includeNumbers, includeSymbols)) {
 			return;  // Exit early if validation fails
 		}
 		
@@ -94,19 +94,19 @@ const PasswordGeneratorModule = (function() {
 			minNumbers = 0;
 		}
 
-		// If special characters checkbox is unchecked, treat minSpecialChars as 0
-		if (!includeSpecialChars) {
-			minSpecialChars = 0;
+		// If symbols checkbox is unchecked, treat minSymbols as 0
+		if (!includeSymbols) {
+			minSymbols = 0;
 		}
 		
-		const charset = getCharset(includeLowercase, includeUppercase, includeNumbers, includeSpecialChars, excludeAmbiguous);
+		const charset = getCharset(includeLowercase, includeUppercase, includeNumbers, includeSymbols, excludeAmbiguous);
 		
 		const numberCharset = excludeAmbiguous ? "23456789" : "0123456789"; // Excluding "0" and "1" if checked
-    	const specialCharset = "!@#$%^&*";
+    	const symbolCharset = "!@#$%^&*";
 
-		// Ensure password meets minimum numbers and special characters requirement
+		// Ensure password meets minimum numbers and symbols requirement
 		let password = "";
-		password = addMinimumChars(password, minNumbers, minSpecialChars, numberCharset, specialCharset);
+		password = addMinimumChars(password, minNumbers, minSymbols, numberCharset, symbolCharset);
 		
 		// Fill the rest of the password randomly from the selected charset
 		for (let i = password.length; i < length; i++) {
@@ -124,14 +124,14 @@ const PasswordGeneratorModule = (function() {
 			password = password.slice(0, password.length - 1) + uppercaseCharset[Math.floor(Math.random() * uppercaseCharset.length)];
 		}
 		
-		// Shuffle password to randomize the order (to prevent having the numbers and special chars always at the beginning)
+		// Shuffle password to randomize the order (to prevent having the numbers and symbols always at the beginning)
 		password = shuffleString(password);
 
 		// Display the generated password
 		document.getElementById('password').textContent = password;
 	}
 
-	// Function to shuffle a string (to mix numbers and special chars into the final password randomly)
+	// Function to shuffle a string (to mix numbers and symbols into the final password randomly)
 	function shuffleString(str) {
 		const arr = str.split('');
 		for (let i = arr.length - 1; i > 0; i--) {
