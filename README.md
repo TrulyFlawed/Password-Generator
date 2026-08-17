@@ -1,7 +1,9 @@
 # Password Generator
 
 > [!CAUTION]
-> Do not trust a random website made by an Internet stranger to generate good passwords. Please use a dedicated password manager to generate passwords securely for you.
+> Do not trust a random website made by an Internet stranger to generate good passwords. I cannot in good faith recommend that you choose my shitty password generator over something else.
+> - Most password managers come with a dedicated password generator, prefer to use them.
+> - This is mostly a personal experiment that uses pseudo-random numbers currently (so it's not really secure).
 
 This is a simple password generator program I made. It is heavily modeled off of Bitwarden's password generator, and thus includes many of those same configuration options from Bitwarden's password generator.
 
